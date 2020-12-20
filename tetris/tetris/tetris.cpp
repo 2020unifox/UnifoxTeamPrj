@@ -136,6 +136,46 @@ void EntirePrt() {
 	Prtbreak();
 }
 
+int ExSur(int x, int y, int z, int r) { 
+	int i, k = EMPTY;
+	for (i = 0; i < 8; i += 2) k = maximum(k, board[x + block[z][r][i]][y + block[z][r][i + 1]]); 
+	return k; 
+}
+
+int Downonce() { 
+	if (ExSur(nx, ny + 1, Block, Shape) != EMPTY) {
+		Exline();
+		return TRUE;
+	}
+	PrtBlock(FALSE);
+	ny++;
+	PrtBlock(TRUE);
+	return FALSE;
+}
+
+void Exline() { 
+	int i, j, x, y, combo = 0, n = 0;
+	for (i = 0; i < 8; i += 2) {
+		board[nx + block[Block][Shape][i]][ny + block[Block][Shape][i + 1]] = nBLOCK;
+		gotoxy(HOR + (block[Block][Shape][i] + nx) * 2, VER + block[Block][Shape][i + 1] + ny);
+		puts(BStates[nBLOCK]);
+	}
+	for (i = 1; i < HEI + 1; i++) {
+		for (j = 1; j < WID + 1; j++) if (board[j][i] != nBLOCK)break; 
+		if (j == WID + 1) {
+			n++;
+			PrtCombo(++combo);
+			for (x = i; x > 1; x--) for (y = 1; y < WID + 1; y++) board[y][x] = board[y][x - 1];
+			breaks++;
+			Prtbreak();
+			Sleep(400);
+			PrtIn();
+		}
+	}
+	combo = 0;
+	if (breaks >= 10)Prtstage();
+}
+
 int keyinput() {
 	char ch;
 	if (kbhit()) {
@@ -179,46 +219,6 @@ int keyinput() {
 	return FALSE;
 }
 
-int ExSur(int x, int y, int z, int r) { 
-	int i, k = EMPTY;
-	for (i = 0; i < 8; i += 2) k = maximum(k, board[x + block[z][r][i]][y + block[z][r][i + 1]]); 
-	return k; 
-}
-
-int Downonce() { 
-	if (ExSur(nx, ny + 1, Block, Shape) != EMPTY) {
-		Exline();
-		return TRUE;
-	}
-	PrtBlock(FALSE);
-	ny++;
-	PrtBlock(TRUE);
-	return FALSE;
-}
-
-void Exline() { 
-	int i, j, x, y, combo = 0, n = 0;
-	for (i = 0; i < 8; i += 2) {
-		board[nx + block[Block][Shape][i]][ny + block[Block][Shape][i + 1]] = nBLOCK;
-		gotoxy(HOR + (block[Block][Shape][i] + nx) * 2, VER + block[Block][Shape][i + 1] + ny);
-		puts(BStates[nBLOCK]);
-	}
-	for (i = 1; i < HEI + 1; i++) {
-		for (j = 1; j < WID + 1; j++) if (board[j][i] != nBLOCK)break; 
-		if (j == WID + 1) {
-			n++;
-			PrtCombo(++combo);
-			for (x = i; x > 1; x--) for (y = 1; y < WID + 1; y++) board[y][x] = board[y][x - 1];
-			breaks++;
-			Prtbreak();
-			Sleep(400);
-			PrtIn();
-		}
-	}
-	combo = 0;
-	if (breaks >= 10)Prtstage();
-}
-
 void PrtIn() { 
 	int i, j;
 	for (i = 1; i < WID + 1; i++) {
@@ -258,6 +258,21 @@ void PrtShade(int tmp) {
 	}
 }
 
+void PrtCombo(int x) {
+	gotoxy(HOR + 8, 8);
+	printf("%d combo", x);
+	gotoxy(HOR + 16, 9);
+	printf("+%d", x*x * 100);
+	gotoxy(HOR + 16, 10);
+	printf("+%d", level*x * 100);
+	PrtScore(x*x * 100, level*x * 100);
+}
+
+void Prtbreak() {
+	gotoxy(30, 25);
+	printf("Breaks : %d/10", breaks);
+}
+
 void Prtstage() {
 	int i, j;
 	if (breaks >= 10) {
@@ -279,24 +294,9 @@ void Prtstage() {
 		if (Speed > 4)Speed -= 4;
 		else Speed = 2;
 		level++;
-		if (level == 7)Sh = FALSE; 
+		if (level == 7)Sh = FALSE;
 	}
 	gotoxy(30, 27);
 	printf("Level : %d", level);
 	Prtbreak();
-}
-
-void PrtCombo(int x) {
-	gotoxy(HOR + 8, 8);
-	printf("%d combo", x);
-	gotoxy(HOR + 16, 9);
-	printf("+%d", x*x * 100);
-	gotoxy(HOR + 16, 10);
-	printf("+%d", level*x * 100);
-	PrtScore(x*x * 100, level*x * 100);
-}
-
-void Prtbreak() {
-	gotoxy(30, 25);
-	printf("Breaks : %d/10", breaks);
 }

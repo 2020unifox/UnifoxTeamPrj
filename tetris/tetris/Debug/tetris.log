@@ -1,4 +1,0 @@
-﻿  tetris.cpp
-d:\sunrint\c_language\2020unifoxprj\tetris\tetris\tetris.cpp(36): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-d:\sunrint\c_language\2020unifoxprj\tetris\tetris\tetris.cpp(69): warning C4101: 'ch' :참조되지 않은 지역 변수입니다.
-  tetris.vcxproj -> D:\sunrint\C_Language\2020UniFoxPrj\tetris\Debug\tetris.exe
